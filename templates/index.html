@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页音乐播放器</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 播放器主界面 -->
+        <div class="player">
+            <!-- 封面显示 -->
+            <div class="cover-container">
+                <div class="cover-wrapper">
+                    <img id="album-cover" src="{{ url_for('static', filename='images/default-cover.png') }}"
+                         alt="专辑封面" class="cover-image"
+                         onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23333%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23666%22 font-size=%2240%22>🎵</text></svg>'">
+                </div>
+            </div>
+
+            <!-- 歌曲信息 -->
+            <div class="track-info">
+                <h2 id="track-title">未播放</h2>
+                <p id="track-artist">请选择歌曲播放</p>
+                <p id="track-album"></p>
+            </div>
+
+            <!-- 播放进度 -->
+            <div class="progress-container">
+                <span id="current-time">0:00</span>
+                <input type="range" id="progress-bar" class="progress-bar" min="0" max="100" value="0">
+                <span id="duration">0:00</span>
+            </div>
+
+            <!-- 播放控制 -->
+            <div class="controls">
+                <button id="prev-btn" class="control-btn" title="上一首">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                    </svg>
+                </button>
+                <button id="play-btn" class="control-btn play-btn" title="播放/暂停">
+                    <svg id="play-icon" viewBox="0 0 24 24" width="32" height="32">
+                        <path fill="currentColor" d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg id="pause-icon" viewBox="0 0 24 24" width="32" height="32" style="display: none;">
+                        <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
+                <button id="next-btn" class="control-btn" title="下一首">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- 播放模式 -->
+            <div class="play-modes">
+                <button id="mode-btn" class="mode-btn" title="切换播放模式">
+                    <span id="mode-icon">🔀</span>
+                    <span id="mode-text">随机播放</span>
+                </button>
+            </div>
+
+            <!-- 音量控制 -->
+            <div class="volume-container">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+                <input type="range" id="volume-bar" class="volume-bar" min="0" max="100" value="80">
+            </div>
+        </div>
+
+        <!-- 上传区域 -->
+        <div class="upload-section">
+            <h3>上传音乐</h3>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" accept=".mp3,.flac,audio/*" multiple hidden>
+                <div class="upload-content">
+                    <svg viewBox="0 0 24 24" width="48" height="48">
+                        <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                    <p>点击选择文件或拖拽文件到此处</p>
+                    <p class="hint">支持 MP3 和 FLAC 格式</p>
+                </div>
+            </div>
+            <div id="upload-progress" class="upload-progress" style="display: none;">
+                <div class="progress-bar-bg">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <span id="upload-status">上传中...</span>
+            </div>
+        </div>
+
+        <!-- 播放列表 -->
+        <div class="playlist-section">
+            <div class="playlist-header">
+                <h3>播放列表</h3>
+                <button id="clear-playlist" class="clear-btn">清空列表</button>
+            </div>
+            <div id="playlist" class="playlist">
+                <p class="empty-playlist">播放列表为空，请上传音乐</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏式 audio 元素 -->
+    <audio id="audio-player"></audio>
+
+    <script src="{{ url_for('static', filename='js/player.js') }}"></script>
+</body>
+</html>
